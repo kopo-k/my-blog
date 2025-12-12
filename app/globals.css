@@ -19,32 +19,38 @@
 @layer components {
   /* Prism.js シンタックスハイライト */
   pre[class*="language-"] {
-    @apply rounded-lg overflow-x-auto;
+    border-radius: 0.5rem;
+    overflow-x: auto;
   }
 
   code[class*="language-"] {
-    @apply text-sm;
+    font-size: 0.875rem;
   }
 
   /* 記事内のスタイル */
   .prose pre {
-    @apply bg-gray-900 text-gray-100;
+    background-color: rgb(17 24 39);
+    color: rgb(243 244 246);
   }
 
   .prose code {
-    @apply bg-gray-100 text-gray-900 px-1 py-0.5 rounded;
+    background-color: rgb(243 244 246);
+    color: rgb(17 24 39);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
   }
 
   .prose pre code {
-    @apply bg-transparent p-0;
+    background-color: transparent;
+    padding: 0;
   }
 
   .prose h2 {
-    @apply scroll-mt-20;
+    scroll-margin-top: 5rem;
   }
 
   .prose h3 {
-    @apply scroll-mt-20;
+    scroll-margin-top: 5rem;
   }
 
   /* line-clamp utility */

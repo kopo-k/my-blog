@@ -36,7 +36,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* ロゴ */}
           <Link href="/" className="flex items-center">
-            <span className="text-xl font-bold">DevLog</span>
+            <span className="text-xl font-bold">kopo-k&apos;s DevLog</span>
           </Link>
 
           {/* デスクトップナビゲーション */}

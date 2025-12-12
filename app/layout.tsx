@@ -17,12 +17,12 @@ const geistMono = Geist_Mono({
 
 // メタデータの設定
 export const metadata: Metadata = {
-  title: "DevLog - プログラミング学習の記録",
+  title: "kopo-k's DevLog - プログラミング学習の記録",
   description: "プログラミング初学者〜中級者向けに、基礎知識・学習ログ・技術記事を体系的に発信する個人ブログ",
   keywords: ["プログラミング", "Web開発", "Next.js", "React", "TypeScript"],
-  authors: [{ name: "DevLog" }],
+  authors: [{ name: "kopo-k" }],
   openGraph: {
-    title: "DevLog - プログラミング学習の記録",
+    title: "kopo-k's DevLog - プログラミング学習の記録",
     description: "プログラミング初学者〜中級者向けに、基礎知識・学習ログ・技術記事を体系的に発信する個人ブログ",
     type: "website",
     locale: "ja_JP",

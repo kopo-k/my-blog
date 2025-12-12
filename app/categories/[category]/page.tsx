@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const { category: categoryParam } = await params
   const category = decodeURIComponent(categoryParam)
   return {
-    title: `${category} | DevLog`,
+    title: `${category} | kopo-k's DevLog`,
     description: `${category}カテゴリの記事一覧`,
   }
 }

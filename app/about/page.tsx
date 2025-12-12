@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About | DevLog',
-  description: 'DevLogについて - プログラミング学習ブログ',
+  title: 'About | kopo-k\'s DevLog',
+  description: 'kopo-k\'s DevLogについて - プログラミング学習ブログ',
 }
 
 export default function AboutPage() {
@@ -14,10 +14,10 @@ export default function AboutPage() {
 
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              DevLogについて
+              kopo-k&apos;s DevLogについて
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              DevLogは、プログラミング学習の過程を記録し、知識を体系的に整理するための個人ブログです。
+              kopo-k&apos;s DevLogは、プログラミング学習の過程を記録し、知識を体系的に整理するための個人ブログです。
               初学者から中級者の方々に向けて、実践的な技術記事や学習ログを発信しています。
             </p>
           </section>
@@ -116,7 +116,7 @@ export default function AboutPage() {
             </p>
             <div className="mt-6 flex gap-4">
               <a
-                href="https://github.com"
+                href="https://github.com/kopo-k"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
@@ -124,12 +124,12 @@ export default function AboutPage() {
                 GitHub
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com/dshdh364192"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
-                Twitter
+                X (Twitter)
               </a>
             </div>
           </section>

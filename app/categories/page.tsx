@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { getAllCategories, getPostsByCategory } from '@/lib/mdx'
 
 export const metadata = {
-  title: 'カテゴリ | DevLog',
+  title: 'カテゴリ | kopo-k\'s DevLog',
   description: 'プログラミング学習記事のカテゴリ一覧',
 }
 

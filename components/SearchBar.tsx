@@ -2,7 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Post } from '@/lib/mdx'
+
+export interface Post {
+  slug: string
+  title: string
+  date: string
+  category: string
+  tags: string[]
+  description: string
+  content: string
+  readingTime?: number
+  published?: boolean
+}
 
 interface SearchBarProps {
   posts: Post[]

@@ -1,6 +1,22 @@
 import Link from 'next/link'
-import { formatDate } from '@/lib/mdx'
-import type { Post } from '@/lib/mdx'
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
+
+export interface Post {
+  slug: string
+  title: string
+  date: string
+  category: string
+  tags: string[]
+  description: string
+  content: string
+  readingTime?: number
+  published?: boolean
+}
+
+function formatDate(date: string): string {
+  return format(new Date(date), 'yyyy年MM月dd日', { locale: ja })
+}
 
 interface PostCardProps {
   post: Post

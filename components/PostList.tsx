@@ -2,7 +2,18 @@
 
 import { useState } from 'react'
 import PostCard from '@/components/PostCard'
-import { Post } from '@/lib/mdx'
+
+export interface Post {
+  slug: string
+  title: string
+  date: string
+  category: string
+  tags: string[]
+  description: string
+  content: string
+  readingTime?: number
+  published?: boolean
+}
 
 interface PostListProps {
   posts: Post[]

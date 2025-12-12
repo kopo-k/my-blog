@@ -5,6 +5,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrismPlus from 'rehype-prism-plus'
 import remarkGfm from 'remark-gfm'
 import { getAllPosts, getPostBySlug, formatDate } from '@/lib/mdx'
+import { MDXComponents } from '@/components/MDXComponents'
 import type { Metadata } from 'next'
 
 interface PostPageProps {
@@ -89,6 +90,7 @@ export default async function PostPage({ params }: PostPageProps) {
         <div className="prose prose-lg max-w-none">
           <MDXRemote
             source={post.content}
+            components={MDXComponents}
             options={{
               mdxOptions: {
                 remarkPlugins: [remarkGfm],

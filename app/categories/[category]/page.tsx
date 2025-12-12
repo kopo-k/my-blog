@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { getAllCategories, getPostsByCategory } from '@/lib/mdx'
 import PostCard from '@/components/PostCard'
 import type { Metadata } from 'next'
@@ -40,9 +41,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <a href="/categories" className="hover:text-gray-700">
+            <Link href="/categories" className="hover:text-gray-700">
               カテゴリ
-            </a>
+            </Link>
             <span>/</span>
             <span>{category}</span>
           </div>

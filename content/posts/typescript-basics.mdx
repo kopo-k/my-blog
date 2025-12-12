@@ -1,0 +1,101 @@
+---
+title: "TypeScriptの型システム入門"
+date: "2025-01-08"
+category: "TypeScript"
+tags: ["TypeScript", "基礎"]
+description: "初心者向けのTypeScript型システムの基礎知識と実践例。"
+published: true
+---
+
+## TypeScriptとは
+
+TypeScriptは、JavaScriptに静的型付けを追加したプログラミング言語です。コンパイル時に型チェックを行うことで、実行時エラーを事前に防ぐことができます。
+
+## 基本的な型
+
+### プリミティブ型
+
+```typescript
+let name: string = "Alice"
+let age: number = 25
+let isStudent: boolean = true
+let data: null = null
+let value: undefined = undefined
+```
+
+### 配列とタプル
+
+```typescript
+// 配列
+let numbers: number[] = [1, 2, 3]
+let strings: Array<string> = ["a", "b", "c"]
+
+// タプル
+let tuple: [string, number] = ["Alice", 25]
+```
+
+### オブジェクト型
+
+```typescript
+interface User {
+  id: number
+  name: string
+  email?: string // オプショナルプロパティ
+}
+
+const user: User = {
+  id: 1,
+  name: "Alice"
+}
+```
+
+## 高度な型
+
+### Union型とIntersection型
+
+```typescript
+// Union型
+type Status = "success" | "error" | "loading"
+let currentStatus: Status = "success"
+
+// Intersection型
+type Person = { name: string }
+type Employee = { employeeId: number }
+type Staff = Person & Employee
+
+const staff: Staff = {
+  name: "Bob",
+  employeeId: 123
+}
+```
+
+### ジェネリクス
+
+```typescript
+function identity<T>(arg: T): T {
+  return arg
+}
+
+const num = identity<number>(42)
+const str = identity<string>("hello")
+```
+
+## 型ガード
+
+```typescript
+function isString(value: unknown): value is string {
+  return typeof value === "string"
+}
+
+function processValue(value: string | number) {
+  if (isString(value)) {
+    console.log(value.toUpperCase())
+  } else {
+    console.log(value.toFixed(2))
+  }
+}
+```
+
+## まとめ
+
+TypeScriptの型システムを活用することで、より安全で保守性の高いコードを書くことができます。基本的な型から始めて、徐々に高度な型機能を学んでいくことをおすすめします。

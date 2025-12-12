@@ -16,8 +16,16 @@ const geistMono = Geist_Mono({
 
 // メタデータの設定
 export const metadata: Metadata = {
-  title: "kopo-kの個人ブログ",
-  description: "日々の学びや技術情報を発信するブログです。",
+  title: "DevLog - プログラミング学習の記録",
+  description: "プログラミング初学者〜中級者向けに、基礎知識・学習ログ・技術記事を体系的に発信する個人ブログ",
+  keywords: ["プログラミング", "Web開発", "Next.js", "React", "TypeScript"],
+  authors: [{ name: "DevLog" }],
+  openGraph: {
+    title: "DevLog - プログラミング学習の記録",
+    description: "プログラミング初学者〜中級者向けに、基礎知識・学習ログ・技術記事を体系的に発信する個人ブログ",
+    type: "website",
+    locale: "ja_JP",
+  },
 };
 
 
@@ -32,7 +40,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <main className="min-h-screen"> {children} </main>
+        {children}
         {/* <Footer /> */}
       </body>
     </html>

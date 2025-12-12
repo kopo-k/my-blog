@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import PostCard from '@/components/PostCard'
-import { Post } from '@/lib/mdx'
+import type { Post } from '@/types/post'
 
 export default function SearchPage() {
   const searchParams = useSearchParams()

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Post } from '@/lib/mdx'
+import type { Post } from '@/types/post'
 
 interface CategoryFilterProps {
   categories: string[]

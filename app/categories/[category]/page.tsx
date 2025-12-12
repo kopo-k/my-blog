@@ -4,9 +4,9 @@ import PostCard from '@/components/PostCard'
 import type { Metadata } from 'next'
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     category: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -17,15 +17,17 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const category = decodeURIComponent(params.category)
+  const { category: categoryParam } = await params
+  const category = decodeURIComponent(categoryParam)
   return {
     title: `${category} | DevLog`,
     description: `${category}カテゴリの記事一覧`,
   }
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const category = decodeURIComponent(params.category)
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { category: categoryParam } = await params
+  const category = decodeURIComponent(categoryParam)
   const posts = getPostsByCategory(category)
   const categories = getAllCategories()
 

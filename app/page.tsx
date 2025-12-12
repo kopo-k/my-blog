@@ -1,10 +1,10 @@
-import { getAllPosts, getAllCategories } from '@/lib/mdx'
-import PostList from '@/components/PostList'
-import SearchBar from '@/components/SearchBar'
+import { getAllPosts, getAllCategories, getAllTags } from '@/lib/mdx'
+import FilterablePostList from '@/components/FilterablePostList'
 
 export default function Home() {
   const posts = getAllPosts()
   const categories = getAllCategories()
+  const tags = getAllTags()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -17,15 +17,10 @@ export default function Home() {
           <p className="text-lg text-gray-600 mb-8">
             初学者から中級者向けに、基礎知識・学習ログ・技術記事を発信しています。一緒に成長していきましょう。
           </p>
-
-          {/* 検索バー */}
-          <div className="max-w-md mx-auto">
-            <SearchBar posts={posts} />
-          </div>
         </div>
 
-        {/* 記事一覧（カテゴリフィルター付き） */}
-        <PostList posts={posts} categories={categories} />
+        {/* フィルタリング可能な記事一覧 */}
+        <FilterablePostList posts={posts} categories={categories} tags={tags} />
       </main>
     </div>
   )

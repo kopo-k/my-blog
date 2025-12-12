@@ -1,0 +1,72 @@
+---
+title: "Git/GitHubの基本操作マスター"
+date: "2025-12-10"
+description: "バージョン管理システムGitとGitHubの基本的な使い方を解説します。コミット、ブランチ、プルリクエストなど。"
+tags: ["Git", "GitHub", "バージョン管理", "初心者向け"]
+category: "ツール"
+---
+
+# Git/GitHubの基本操作マスター
+
+バージョン管理は現代の開発において必須のスキルです。
+
+## Gitとは
+
+Gitは分散型バージョン管理システムです。
+
+### 基本コマンド
+
+```bash
+# リポジトリの初期化
+git init
+
+# ファイルをステージング
+git add .
+
+# コミット
+git commit -m "Initial commit"
+
+# リモートリポジトリを追加
+git remote add origin https://github.com/username/repo.git
+
+# プッシュ
+git push -u origin main
+```
+
+## ブランチ操作
+
+```bash
+# ブランチの作成
+git branch feature-branch
+
+# ブランチの切り替え
+git checkout feature-branch
+
+# ブランチの作成と切り替えを同時に
+git checkout -b new-feature
+```
+
+## GitHubでの協業
+
+1. フォークとクローン
+2. ブランチの作成
+3. 変更のコミット
+4. プルリクエストの作成
+5. コードレビュー
+6. マージ
+
+## よくあるトラブルシューティング
+
+### コンフリクトの解決
+
+コンフリクトが発生した場合は、手動で解決する必要があります。
+
+```bash
+# コンフリクトを確認
+git status
+
+# ファイルを編集してコンフリクトを解決
+# その後、add と commit
+git add .
+git commit -m "Resolve conflicts"
+```

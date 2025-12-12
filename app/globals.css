@@ -1,9 +1,9 @@
+/* Prism.js syntax highlighting theme */
+@import './prism-theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Prism.js syntax highlighting theme */
-@import './prism-theme.css';
 
 @layer base {
   :root {

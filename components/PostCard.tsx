@@ -1,18 +1,7 @@
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-
-export interface Post {
-  slug: string
-  title: string
-  date: string
-  category: string
-  tags: string[]
-  description: string
-  content: string
-  readingTime?: number
-  published?: boolean
-}
+import type { Post } from '@/types/post'
 
 function formatDate(date: string): string {
   return format(new Date(date), 'yyyy年MM月dd日', { locale: ja })

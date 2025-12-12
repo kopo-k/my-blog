@@ -22,7 +22,16 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200">
+    <>
+      {/* スキップリンク（アクセシビリティ向上） */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50"
+      >
+        メインコンテンツへスキップ
+      </a>
+
+      <header className="bg-white border-b border-gray-200" role="banner">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* ロゴ */}
@@ -94,5 +103,6 @@ export default function Header() {
         </div>
       )}
     </header>
+    </>
   )
 }

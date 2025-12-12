@@ -3,23 +3,9 @@ import path from 'path'
 import matter from 'gray-matter'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import type { Post, PostMatter } from '@/types/post'
 
 const postsDirectory = path.join(process.cwd(), 'content', 'posts')
-
-export interface PostMatter {
-  title: string
-  date: string
-  category: string
-  tags: string[]
-  description: string
-  published?: boolean
-}
-
-export interface Post extends PostMatter {
-  slug: string
-  content: string
-  readingTime?: number
-}
 
 // 全ての記事を取得
 export function getAllPosts(): Post[] {

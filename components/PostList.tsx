@@ -2,18 +2,7 @@
 
 import { useState } from 'react'
 import PostCard from '@/components/PostCard'
-
-export interface Post {
-  slug: string
-  title: string
-  date: string
-  category: string
-  tags: string[]
-  description: string
-  content: string
-  readingTime?: number
-  published?: boolean
-}
+import type { Post } from '@/types/post'
 
 interface PostListProps {
   posts: Post[]

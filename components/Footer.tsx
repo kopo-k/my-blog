@@ -7,26 +7,26 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Öí°Å1 */}
+          {/* ãƒ–ãƒ­ã‚°æƒ…å ± */}
           <div>
             <h3 className="text-white font-semibold mb-3">DevLog</h3>
             <p className="text-sm text-gray-400">
-              ×í°éßó°fÒn2h€S‹’záY‹ºÖí°gY
+              ãƒ—ãƒ­ã‚°ãƒ©ãƒŸãƒ³ã‚°å­¦ç¿’ã®è¨˜éŒ²ã¨æŠ€è¡“è¨˜äº‹ã‚’ç™ºä¿¡ã™ã‚‹å€‹äººãƒ–ãƒ­ã‚°ã§ã™ã€‚
             </p>
           </div>
 
-          {/* êó¯ */}
+          {/* ãƒªãƒ³ã‚¯ */}
           <div>
-            <h4 className="text-white font-semibold mb-3">êó¯</h4>
+            <h4 className="text-white font-semibold mb-3">ãƒªãƒ³ã‚¯</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
-                  Ûüà
+                  ãƒ›ãƒ¼ãƒ 
                 </Link>
               </li>
               <li>
                 <Link href="/categories" className="hover:text-white transition-colors">
-                  «Æ´ê
+                  ã‚«ãƒ†ã‚´ãƒª
                 </Link>
               </li>
               <li>
@@ -67,9 +67,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ³Ôüé¤È */}
+        {/* ã‚³ãƒ”ãƒ¼ãƒ©ã‚¤ãƒˆ */}
         <div className="mt-8 pt-8 border-t border-gray-700 text-center text-sm text-gray-400">
-          <p>© {currentYear} DevLog. All rights reserved.</p>
+          <p>&copy; {currentYear} DevLog. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -46,6 +46,34 @@
   .prose pre code {
     background-color: transparent;
     padding: 0;
+    color: inherit !important;
+  }
+
+  /* Prismコードブロックの修正 */
+  .prose pre[class*="language-"] {
+    background-color: #2d2d2d !important;
+  }
+
+  .prose pre[class*="language-"] code {
+    color: #ccc !important;
+    display: block !important;
+  }
+
+  /* トークンの色を確保 */
+  .prose .token.keyword {
+    color: #cc99cd !important;
+  }
+
+  .prose .token.string {
+    color: #7ec699 !important;
+  }
+
+  .prose .token.function {
+    color: #f08d49 !important;
+  }
+
+  .prose .token.comment {
+    color: #999 !important;
   }
 
   .prose h2 {

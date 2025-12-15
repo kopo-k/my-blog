@@ -6,7 +6,7 @@
 
 code[class*="language-"],
 pre[class*="language-"] {
-  color: #ccc;
+  color: #ccc !important;
   background: none;
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   font-size: 1em;
@@ -25,6 +25,13 @@ pre[class*="language-"] {
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
+}
+
+/* Ensure code visibility in all language blocks */
+pre[class*="language-"] code {
+  color: #ccc !important;
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Code blocks */
@@ -119,4 +126,120 @@ pre[class*="language-"] {
 
 .token.inserted {
   color: #90a959;
+}
+
+/* Plain text code blocks */
+pre.language-text code,
+pre.language-text {
+  color: #ccc;
+  background: #2d2d2d;
+}
+
+/* コードブロックの言語名表示 */
+pre[class*="language-"] {
+  position: relative;
+  padding-top: 2.5em;
+}
+
+pre[class*="language-"]::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.25em 0.5em;
+  font-size: 0.75em;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom-right-radius: 0.25em;
+}
+
+pre.language-bash::before {
+  content: 'bash';
+  color: #7ec699;
+}
+
+pre.language-javascript::before,
+pre.language-js::before {
+  content: 'javascript';
+  color: #f8c555;
+}
+
+pre.language-typescript::before,
+pre.language-ts::before {
+  content: 'typescript';
+  color: #67cdcc;
+}
+
+pre.language-jsx::before {
+  content: 'jsx';
+  color: #cc99cd;
+}
+
+pre.language-tsx::before {
+  content: 'tsx';
+  color: #cc99cd;
+}
+
+pre.language-css::before {
+  content: 'css';
+  color: #e2777a;
+}
+
+pre.language-html::before {
+  content: 'html';
+  color: #e2777a;
+}
+
+pre.language-json::before {
+  content: 'json';
+  color: #f08d49;
+}
+
+pre.language-yaml::before {
+  content: 'yaml';
+  color: #f08d49;
+}
+
+pre.language-markdown::before,
+pre.language-md::before {
+  content: 'markdown';
+  color: #ccc;
+}
+
+pre.language-text::before,
+pre.language-plaintext::before {
+  content: 'text';
+  color: #ccc;
+}
+
+pre.language-python::before {
+  content: 'python';
+  color: #6196cc;
+}
+
+pre.language-java::before {
+  content: 'java';
+  color: #f08d49;
+}
+
+pre.language-c::before {
+  content: 'c';
+  color: #67cdcc;
+}
+
+pre.language-cpp::before {
+  content: 'c++';
+  color: #67cdcc;
+}
+
+pre.language-go::before {
+  content: 'go';
+  color: #67cdcc;
+}
+
+pre.language-rust::before {
+  content: 'rust';
+  color: #f08d49;
 }

@@ -1,0 +1,315 @@
+---
+title: "git rebaseを理解する - 実践的な使い方と注意点"
+date: "2025-12-15"
+description: "git rebaseの基本から実践的な使い方まで、初心者にもわかりやすく解説。mergeとの違い、使い分け、注意点を具体例で学びます。"
+tags: ["Git", "バージョン管理", "開発環境"]
+category: "Git"
+---
+
+# git rebaseを理解する
+
+**rebase** = "base を re（再設定）する"こと。ブランチの「起点」を変更するコマンドです。
+
+## 基本的な動作
+
+git rebaseは、コミット履歴を書き換えて、ブランチの起点を別の場所に移動させます。
+
+```text
+# rebase前
+main:    A---B---C
+              \
+feature:       D---E
+
+# git rebase main 後
+main:    A---B---C
+                  \
+feature:           D'---E'
+```
+
+コミットD, Eを「main の最新コミットCの上に付け替える」イメージです。
+
+## mergeとの違い
+
+開発現場でよく比較される2つのコマンドの違いを見てみましょう。
+
+### merge（マージ）
+
+```bash
+git merge feature
+```
+
+**特徴**:
+- 履歴を残したまま統合
+- 分岐が見える
+- マージコミットが作られる
+
+```text
+main:    A---B---C-------M
+              \         /
+feature:       D---E---
+```
+
+### rebase（リベース）
+
+```bash
+git rebase main
+```
+
+**特徴**:
+- 履歴を一直線にする
+- 分岐が消える
+- マージコミットは作られない
+
+```text
+main:    A---B---C
+                  \
+feature:           D'---E'
+```
+
+## 実践的な使い方
+
+### シーン1: 機能開発中にmainが進んでしまった
+
+**状況**:
+
+```text
+あなた: 新機能を開発中（3日かかる）
+同僚: その間にmainに新機能をマージ
+
+main:    A---B---C-------F---G  ← 同僚の更新
+              \
+feature:       D---E  ← あなたの作業
+```
+
+**問題**: このままマージすると古いコードベースの上に作った機能になる
+
+**解決**:
+
+```bash
+git checkout feature
+git fetch origin              # リモートの最新情報を取得
+git rebase origin/main        # 最新のmainに付け替え
+```
+
+**結果**:
+
+```text
+main:    A---B---C---F---G
+                          \
+feature:                   D'---E'
+```
+
+**目的**: 最新のコードに対して開発したことにする
+
+### シーン2: コミット履歴を整理する
+
+**状況**:
+
+開発中、試行錯誤でコミットが増えてしまった...
+
+```bash
+git log
+# fix typo
+# WIP
+# 動いた！
+# また typo
+# やっと完成
+```
+
+**問題**: レビュワーが見づらい、履歴が読めない
+
+**解決**:
+
+```bash
+git rebase -i HEAD~5  # 直近5コミットを編集
+```
+
+エディタが開くので、コミットを整理します:
+
+```text
+pick abc1234 WIP
+squash def5678 動いた！          # ← これを1つにまとめる
+squash ghi9012 また typo
+pick jkl3456 やっと完成
+reword mno7890 fix typo          # ← メッセージを書き直す
+```
+
+**目的**: プロフェッショナルな履歴にする
+
+### シーン3: PRレビューで修正依頼を受けた
+
+**よくある流れ**:
+
+```bash
+git log
+# feat: ユーザー登録機能を追加
+# fix: バリデーション追加
+# fix: typo修正
+# fix: レビュー指摘対応
+```
+
+**rebaseで整理**:
+
+```bash
+git rebase -i HEAD~4
+```
+
+エディタが開くので、すべてを1つにまとめます:
+
+```text
+pick abc1234 feat: ユーザー登録機能を追加
+squash def5678 fix: バリデーション追加
+squash ghi9012 fix: typo修正
+squash jkl3456 fix: レビュー指摘対応
+```
+
+**結果**: 1つの綺麗なコミット
+
+```text
+feat: ユーザー登録機能を追加（完成版）
+```
+
+**目的**: 試行錯誤の過程を隠して、完成品だけを見せる
+
+## rebaseとpullの関係
+
+### よくある誤解
+
+```bash
+git rebase main  # ❌ これだけではリモートの最新は取得できない
+```
+
+これは「**ローカルのmainブランチ**」に対してrebaseするだけです。
+
+### 正しい手順
+
+```bash
+# 方法1: fetch してから rebase
+git fetch origin
+git rebase origin/main
+
+# 方法2: pull --rebase で一度に実行
+git pull --rebase origin main
+```
+
+### コマンド比較
+
+| コマンド | 何をする？ |
+|---------|-----------|
+| `git pull origin main` | リモート取得 + **merge** |
+| `git pull --rebase origin main` | リモート取得 + **rebase** |
+| `git fetch` | リモート情報だけ取得 |
+| `git rebase origin/main` | fetch済みの情報でrebase |
+| `git rebase main` | **ローカルのmain**でrebase |
+
+## 重要な注意点
+
+### 1. pushしたコミットをrebaseしない
+
+```bash
+# ❌ 危険: 既にpushしたブランチをrebase
+git push origin feature
+git rebase main          # これは避ける
+git push --force         # 他の人の作業を破壊する可能性
+```
+
+**理由**: 他の人がそのブランチを使っている可能性があるため。
+
+### 2. コンフリクトの解決
+
+rebase中にコンフリクトが発生した場合:
+
+```bash
+# コンフリクト発生
+git rebase main
+
+# ファイルを手動修正後
+git add .
+git rebase --continue
+
+# 中止したい場合
+git rebase --abort
+```
+
+### 3. force pushが必要になる
+
+rebase後はhistoryが書き換わるため、force pushが必要です:
+
+```bash
+# より安全なforce push
+git push --force-with-lease origin feature
+```
+
+`--force-with-lease`は、リモートが想定と違う状態なら失敗するため、より安全です。
+
+### 4. 共同作業中は merge を推奨
+
+- ✅ 自分だけのブランチ → rebase OK
+- ❌ 複数人が使うブランチ → merge推奨
+
+## 使い分けガイド
+
+### rebase を使う場面
+
+1. ✅ 自分だけのブランチを整理
+2. ✅ PRを出す前に履歴を綺麗にする
+3. ✅ mainの最新状態を取り込む（pushする前）
+
+### merge を使う場面
+
+1. ✅ PRをmainに統合する（GitHub上で）
+2. ✅ チームで共有しているブランチ
+3. ✅ 履歴を残したい重要な統合
+
+## 実践的な開発フロー例
+
+```bash
+# 1. 新機能ブランチを作成
+git checkout -b feat/dark-mode
+
+# 2. 作業中... たくさんコミット
+git commit -m "WIP"
+git commit -m "動いた"
+git commit -m "修正"
+
+# 3. PRを出す前に綺麗にする
+git rebase -i HEAD~3
+# → 1つのコミットにまとめる
+
+# 4. mainの最新を取り込む
+git fetch origin
+git rebase origin/main
+# → 最新コードに対して開発したことにする
+
+# 5. PRを作成
+gh pr create
+
+# 6. mainへのマージはGitHub上でmerge
+# （rebaseは使わない）
+```
+
+## まとめ
+
+### 簡単に言うと
+
+- **rebase = 歴史改変**: 「実はこうだったことにする」
+- **merge = 歴史記録**: 「こういう経緯で統合した」と記録
+
+### 黄金ルール
+
+**公開済み（push済み）のコミットは rebase しない**
+
+### いつ使う？
+
+- 人に見せる前にコミット履歴を整理したいとき
+- 最新のコードベースに自分の作業を移植したいとき
+- PRの品質を高めたいとき
+
+### ルール
+
+- ✅ push前なら自由にrebase OK
+- ❌ push後は触らない
+- ✅ 自分だけのブランチならOK
+- ❌ 共有ブランチは避ける
+
+git rebaseは強力なツールですが、使いどころを間違えると危険です。まずは自分だけのローカルブランチで練習して、慣れてから実践で使うことをおすすめします。

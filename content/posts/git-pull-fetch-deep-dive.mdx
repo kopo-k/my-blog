@@ -1,0 +1,404 @@
+---
+title: "git pull、fetch、rebaseの深い理解 - 図解で学ぶGitのリモート操作"
+date: "2025-12-15"
+description: "git pull、fetch、merge、rebaseの違いを図解で詳しく解説。なぜpush済みをrebaseしてはいけないのか、pullの内部動作まで完全理解します。"
+tags: ["Git", "バージョン管理", "チーム開発"]
+category: "Git"
+---
+
+# git pull、fetch、rebaseの深い理解
+
+Gitのリモート操作で混乱しやすい`pull`、`fetch`、`merge`、`rebase`を、図解とともに詳しく解説します。
+
+## git pullの正体
+
+### pullは2つの操作の組み合わせ
+
+**`git pull` = `git fetch` + `git merge`**
+
+つまり、pullは**自動的にfetchしてマージまでしてくれる**コマンドです。
+
+### 動作を分解して理解
+
+#### 1. fetchだけ実行した場合
+
+```bash
+git fetch origin
+```
+
+```text
+[実行前]
+リモート:        A---B---C---D---E
+ローカル:        A---B---C
+
+[実行後]
+origin/main:     A---B---C---D---E  # 更新された！
+main:            A---B---C          # そのまま！
+```
+
+**結果**: リモートの情報は取得したが、作業ブランチは変わらない
+
+#### 2. pullを実行した場合
+
+```bash
+git pull origin main
+```
+
+内部で2つの処理が自動実行：
+
+```text
+[Step 1: fetch]
+origin/main:     A---B---C---D---E  # 取得
+
+[Step 2: merge]
+main:            A---B---C---D---E  # マージされた！
+```
+
+**結果**: 取得して、さらに現在のブランチに統合まで完了
+
+## コマンド比較表
+
+| コマンド | 動作 | リモート情報 | ローカルブランチ | 使用場面 |
+|---------|------|------------|---------------|---------|
+| `fetch` | 取得のみ | 更新される | **変わらない** | 確認してから取り込みたい |
+| `pull` | 取得+統合 | 更新される | **更新される** | すぐに最新にしたい |
+| `merge` | 統合のみ | 変わらない | 更新される | fetch済みを統合 |
+| `rebase` | 履歴整理 | 変わらない | 更新される | コミットを付け替える |
+
+## mergeとrebaseの違い
+
+### 最新のmainを取り込む2つの方法
+
+#### 方法A: merge（履歴を残す）
+
+```bash
+git pull origin main  # = fetch + merge
+```
+
+```text
+[実行前]
+origin/main:    A---B---C---D---E
+                     \
+feature:              F---G---H
+
+[実行後]
+origin/main:    A---B---C---D---E
+                     \           \
+feature:              F---G---H---M（マージコミット）
+```
+
+**特徴**：
+- マージコミット`M`が作られる
+- 履歴に「いつmainを取り込んだか」が残る
+- 分岐した履歴がそのまま見える
+
+#### 方法B: rebase（履歴を整理）
+
+```bash
+git fetch origin
+git rebase origin/main
+```
+
+```text
+[実行前]
+origin/main:    A---B---C---D---E
+                     \
+feature:              F---G---H
+
+[実行後]
+origin/main:    A---B---C---D---E
+                                 \
+feature:                          F'---G'---H'
+```
+
+**特徴**：
+- マージコミットは作られない
+- 最初から最新のmain上で作業していたように見える
+- 一直線の綺麗な履歴
+
+## なぜpush済みをrebaseしてはいけないのか
+
+### シナリオ：チームで同じブランチを使用
+
+```text
+[初期状態 - 全員同じ]
+GitHub:    D---E
+あなた:     D---E
+同僚:       D---E
+```
+
+### 危険な操作の流れ
+
+#### Step 1: あなたがrebase
+
+```bash
+git rebase main
+```
+
+```text
+あなた:     D'---E'  # 新しいコミットID
+GitHub:    D---E     # まだ古い
+同僚:       D---E     # 古いまま
+```
+
+#### Step 2: force push
+
+```bash
+git push --force origin feature
+```
+
+```text
+GitHub:    D'---E'   # 強制的に書き換え！
+同僚:       D---E     # えっ？GitHubと違う！
+```
+
+#### Step 3: 同僚に起きる悲劇
+
+同僚が新しい作業をしていた場合：
+
+```text
+[同僚のPC]
+feature:   D---E---F  # Fは同僚の新しいコミット
+```
+
+同僚がpullすると：
+
+```text
+      D'---E' (GitHub)
+     /       \
+A---B---C     M（変なマージ）
+     \       /
+      D---E---F (同僚のローカル)
+```
+
+**結果**：
+- 同じ内容のコミット（DとD'、EとE'）が2重に存在
+- 履歴がぐちゃぐちゃ
+- コンフリクト地獄
+
+### なぜ危険なのか
+
+1. **コミットIDが変わる**
+   - rebaseするとコミットが「作り直される」
+   - 同じ内容でも別のコミットとして扱われる
+
+2. **他の人の作業が破壊される**
+   - 同僚が基準にしていたコミットが消える
+   - pullするとコンフリクトや重複が発生
+
+3. **履歴の整合性が失われる**
+   - 同じ変更が2回現れる
+   - どれが正しい履歴か分からなくなる
+
+## 実践的な使い分け
+
+### 場面1: 何が来るか確認したい（慎重派）
+
+```bash
+# まず確認
+git fetch origin
+git log origin/main ^main  # 新しいコミットを確認
+git diff origin/main       # 差分を確認
+
+# 納得してから取り込み
+git merge origin/main
+```
+
+### 場面2: とにかく最新にしたい（効率派）
+
+```bash
+# 一発で完了
+git pull origin main
+```
+
+### 場面3: PRを出す前に履歴を綺麗に（きれい好き）
+
+```bash
+# rebaseで整理
+git fetch origin
+git rebase origin/main
+
+# またはpullでもrebase可能
+git pull --rebase origin main
+```
+
+### 場面4: チーム開発中のブランチ（安全第一）
+
+```bash
+# mergeを使う（rebaseは危険）
+git pull origin main
+
+# 理由：
+# - 他の人も同じブランチを使っている
+# - force pushが不要
+# - 履歴の追跡が可能
+```
+
+## コンフリクト解決の違い
+
+### merge: 1回で済む
+
+```bash
+git pull origin main
+# コンフリクト発生
+# 1回解決してコミット
+git add .
+git commit
+```
+
+### rebase: コミットごとに解決
+
+```bash
+git rebase origin/main
+# F適用時: コンフリクト → 解決
+git add .
+git rebase --continue
+# G適用時: コンフリクト → 解決
+git add .
+git rebase --continue
+# H適用時: コンフリクト → 解決
+git add .
+git rebase --continue
+```
+
+## メリット・デメリット比較
+
+### merge vs rebase
+
+| 観点 | merge | rebase |
+|------|-------|--------|
+| **履歴** | 分岐が残る | 一直線 |
+| **マージコミット** | 作られる | 作られない |
+| **コンフリクト** | 1回で済む | 何回も解決 |
+| **push** | 普通にできる | force必要 |
+| **いつ使う** | チーム作業 | 個人作業 |
+| **履歴の追跡** | いつ取り込んだか分かる | 分からない |
+| **安全性** | 高い | 要注意 |
+
+## よくある誤解と真実
+
+### 誤解1: 「rebaseしたら自動で最新になる」
+
+**真実**: rebaseは整理するだけ、fetchは別途必要
+
+```bash
+# ❌ これだけでは古いまま
+git rebase main  # ローカルのmainにrebase
+
+# ✅ 正しい方法
+git fetch origin
+git rebase origin/main  # リモートの最新にrebase
+```
+
+### 誤解2: 「fetchせずにpullしたらどうなる？」
+
+**真実**: pullが自動でfetchしてくれる
+
+```bash
+# pullの内部動作
+git pull origin main
+    ↓
+1. git fetch origin main  # 自動実行
+2. git merge origin/main  # 自動実行
+```
+
+### 誤解3: 「rebaseすればpullは不要」
+
+**真実**: 別々の操作なので両方必要
+
+```bash
+# リモートの変更を取得
+git fetch origin  # または git pull
+
+# その後で整理
+git rebase origin/main
+```
+
+## 黄金ルール
+
+### push前・push後の判断
+
+```javascript
+if (既にpush済み && 他の人も使ってる) {
+  絶対にrebaseしない  // merge を使う
+} else if (自分だけ && まだpush前) {
+  rebase OK
+}
+```
+
+### force pushが必要 = 危険信号
+
+```bash
+# ⚠️ force が必要な時点で要注意
+git push --force origin feature
+
+# より安全な方法
+git push --force-with-lease origin feature
+```
+
+### 迷ったらmerge
+
+- 「記録を残したい」→ merge
+- 「履歴を綺麗に」→ rebase
+- 「よく分からない」→ merge（安全）
+
+## 実践的なワークフロー
+
+### 毎日の作業開始時
+
+```bash
+# featureブランチで作業再開
+git checkout feature
+
+# 最新のmainを取り込む
+git fetch origin
+git rebase origin/main  # または git merge origin/main
+
+# 自分のfeatureの最新も取得
+git pull origin feature
+```
+
+### PR提出前の整理
+
+```bash
+# 作業中は普通にコミット
+git commit -m "WIP"
+git commit -m "機能追加"
+git commit -m "バグ修正"
+
+# PR前に履歴を整理
+git rebase -i HEAD~3  # 3つのコミットを整理
+# → squashで1つにまとめる
+
+# 最新のmainに付け替え
+git fetch origin
+git rebase origin/main
+
+# PRを作成
+gh pr create
+```
+
+## まとめ
+
+### コマンドの本質
+
+- **fetch** = 「見るだけ」（リモート情報を取得）
+- **pull** = 「見て、取り込む」（fetch + merge）
+- **merge** = 「統合する」（履歴を残す）
+- **rebase** = 「付け替える」（履歴を整理）
+
+### 使い分けの指針
+
+1. **公開ブランチ** → merge（安全）
+2. **非公開ブランチ** → rebase（綺麗）
+3. **確認してから** → fetch → merge/rebase
+4. **すぐ欲しい** → pull
+
+### 覚えておくこと
+
+**「pushしたら歴史は確定」**
+- 公開した歴史は書き換えない
+- 映画の公開後に内容を変えるようなもの
+- force pushは最終手段
+
+これらを理解すれば、Gitのリモート操作で迷うことはなくなるでしょう。
